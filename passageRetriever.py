@@ -41,7 +41,7 @@ class PassageParser:
                 document[index] = tokenizer.tokenize_doc_word(word)
             self.passageDictionary[line] = document
 
-    def simplify_passage_dd(self, query):
+    def get_simplify_passage_dd(self, query):
         tokQuery = tokenizer.tokenize_query(query)
         tokQuery = set(tokQuery)
         tempPassageDictionary = {}
@@ -49,7 +49,7 @@ class PassageParser:
             documentSet = set(document)
             if bool(documentSet & tokQuery):
                 tempPassageDictionary[line] = document
-        self.passageDictionary = tempPassageDictionary
+        return tempPassageDictionary
 
     def get_passage_dictionary(self):
         return self.passageDictionary
@@ -66,5 +66,4 @@ if __name__ == "__main__":
     passage = PassageParser(args.document)
     passage.parse_docs_dd(args.windowsize)
     passage.tokenize_dd()
-    passage.simplify_passage_dd(args.query)
-    print(passage.get_passage_dictionary())
+    print(passage.get_simplify_passage_dd(args.query))
