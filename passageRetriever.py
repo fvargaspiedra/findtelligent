@@ -2,7 +2,7 @@
 
 import argparse
 import nltk
-import string
+import tokenizer
 
 
 class PassageParser:
@@ -11,16 +11,16 @@ class PassageParser:
     def __init__(self, document):
         """ Constructor """
         self.doc = document
+        self.passageDictionary = {}
 
     def file_to_array(self):
         """ Transform text file into array of words without spaces """
         return [word for line in open(self.doc, 'r') for word in line.split()]
 
-    def parse_dd(self, window_size):
+    def parse_docs_dd(self, window_size):
         """ Generate passages by window, one passage by word """
         # TBD: Add window_size verification (even number)
         wordArray = self.file_to_array()
-        passageList = {}
         for index in range(0, len(wordArray)):
             windowLeft = int(index - (window_size / 2))
             windowRight = int(index + (window_size / 2))
@@ -32,31 +32,34 @@ class PassageParser:
                     tempPassageList.append("")
                 else:
                     tempPassageList.append(wordArray[current])
-            passageList[index] = tempPassageList
-        return passageList
+            self.passageDictionary[index] = tempPassageList
 
-    def tokenize_dd(self, docs_dictionary):
+    def tokenize_dd(self):
         """ Tokenize a list of lists of strings. Apply stemming and remove stop words without affecting list structure.  """
-        stemmer = nltk.stem.PorterStemmer()
-        translator = str.maketrans('', '', string.punctuation)
-        for line, document in docs_dictionary.items():
+        for line, document in self.passageDictionary.items():
             for index, word in enumerate(document):
-                document[index] = stemmer.stem(word)
-                document[index] = document[index].lower()
-                document[index] = document[index].translate(translator)
-            docs_dictionary[line] = document
-        return docs_dictionary
+                document[index] = tokenizer.tokenize_doc_word(word)
+            self.passageDictionary[line] = document
 
+    def simplify_passage_dd(self, query):
+        tokQuery = tokenizer.tokenize_query(query)
+        tokQuery = list(set(tokQuery))
+        print(tokQuery)
+
+    def get_passage_dictionary(self):
+        return self.passageDictionary
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument("-w", "--windowsize",
                            help="Window size in number of words (even number)", type=int)
-    argparser.add_argument(
-        "-q", "--query", help="Query to be applied to the document", type=str)
+    argparser.add_argument("-q", "--query",
+                           help="Original query from user", type=str)
     argparser.add_argument(
         "document", help="Document file as plain text to be ranked", type=str)
     args = argparser.parse_args()
     passage = PassageParser(args.document)
-    passageList = passage.parse_dd(args.windowsize)
-    print(passage.tokenize_dd(passageList))
+    passage.parse_docs_dd(args.windowsize)
+    passage.tokenize_dd()
+    passage.simplify_passage_dd(args.query)
+    print(passage.get_passage_dictionary())
