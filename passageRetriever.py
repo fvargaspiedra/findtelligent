@@ -43,8 +43,13 @@ class PassageParser:
 
     def simplify_passage_dd(self, query):
         tokQuery = tokenizer.tokenize_query(query)
-        tokQuery = list(set(tokQuery))
-        print(tokQuery)
+        tokQuery = set(tokQuery)
+        tempPassageDictionary = {}
+        for line, document in self.passageDictionary.items():
+            documentSet = set(document)
+            if bool(documentSet & tokQuery):
+                tempPassageDictionary[line] = document
+        self.passageDictionary = tempPassageDictionary
 
     def get_passage_dictionary(self):
         return self.passageDictionary

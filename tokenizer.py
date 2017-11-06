@@ -27,7 +27,7 @@ def tokenize_doc_word(word):
         tokenized_doc_word = stemmer.stem(tokenized_doc_word)
         tokenized_doc_word = tokenized_doc_word.lower()
     else:
-        tokenize_doc_word = ""
+        tokenized_doc_word = ""
     return tokenized_doc_word
 
 if __name__ == "__main__":
