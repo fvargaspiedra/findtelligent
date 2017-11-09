@@ -54,6 +54,9 @@ class PassageParser:
     def get_passage_dictionary(self):
         return self.passageDictionary
 
+    def get_passage_dictionary_size(self):
+        return len(self.passageDictionary)
+
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument("-w", "--windowsize",
