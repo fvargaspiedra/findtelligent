@@ -22,42 +22,45 @@ class DensityDistributions(whoosh.scoring.WeightingModel):
 
     def scorer(self, searcher, fieldname, text, qf):
         # print(text)
-        #print(fieldname)
+        # print(fieldname)
         qf = self.qfDict[text.decode("utf-8")]
         # print(qf)
-        #FIXME qf is not working because the query is normalized I think. Ask the author of the library.
-        #print(self.qfDict)
+        # FIXME qf is not working because the query is normalized I think. Ask the author of the library.
+        # print(self.qfDict)
+        # print(text)
         return DDScorer(searcher, fieldname, text, self.W, qf)
 
 
 class DDScorer(whoosh.scoring.BaseScorer):
 
     def __init__(self, searcher, fieldname, text, window, qf):
-        #print(text)
+        # print(text)
         # IDF and average field length are global statistics, so get them from
         # the top-level searcher
-        # parent = searcher.get_parent()  # Returns self if no parent
-        #self.idf = parent.idf(fieldname, text)
+        parent = searcher.get_parent()  # Returns self if no parent
+        self.idf = parent.idf(fieldname, text)
         self.W = window
         # self.setup(searcher, fieldname, text)
         self.qf = qf
+        self.text = text
+        # print(text)
 
     def score(self, matcher):
         # s = density_distribution(self.idf, self.W, self.qf, matcher)
         #print(matcher.value_as('positions'))
-        # print(self.W)
-        # print(self.qf)
-        return self.qf
+        finalScore = 0
+        for position in matcher.value_as('positions'):
+            x = position - (self.W / 2)
+            hanning = 0.5 * (1 + math.cos(2 * math.pi * x / self.W))
+            #print("Hanning de " + str(self.text) + " en posicion " + str(position) + " es " + str(hanning))
+            weightQueryTerm = math.log(self.qf + 1, 2)
+            #print("Weight de " + str(self.text) + " en posicion " + str(position) + " es " + str(weightQueryTerm))
+            #print("IDF de " + str(self.text) + " en posicion " + str(position) + " es " + str(self.idf))
+            finalScore = finalScore + (hanning * weightQueryTerm * self.idf)
+            #print("Score de " + str(self.text) + " en posicion " + str(position) + " es " + str(finalScore))
+        #print("Score for " + str(self.text) + "is " + str(finalScore))
+        return finalScore
 
-
-def pos_score_fn(searcher, fieldname, text, matcher):
-    # print(text)
-    # print(fieldname)
-    # print(matcher.value_as('positions'))
-    # for i in matcher.matching_terms(id=None):
-    #     print(i)
-    print(matcher.items_as(id))
-    return 1.0
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
@@ -80,24 +83,18 @@ if __name__ == "__main__":
     writer = index.writer()
     # for line, document in simplePassageDict.items():
     writer.add_document(
-        id=1, content=['summari', 'should', 'francisco', 'nothing', 'readabl'])
+        id=1, content=['my', 'name', 'is', 'francisco', 'vargas'])
     writer.add_document(
-        id=2, content=['francisco', 'vargas', 'piedra', 'isabelle', 'guapa'])
+        id=2, content=['francisco', 'is', 'an', 'electrical', 'engineer'])
     writer.add_document(
-        id=3, content=['francisco', 'francisco', 'piedra', 'isabelle', 'guapa'])
-    writer.add_document(
-        id=4, content=['francisco', 'francisco', 'human', 'human', 'readabl'])
-    writer.add_document(
-        id=5, content=['summari', 'should', 'be', 'francisco', 'readabl'])
-    writer.add_document(
-        id=6, content=['francisco', 'vargas', 'francisco', 'francisco', 'guapa'])
+        id=3, content=['name', 'is', 'francisco', 'vargas', 'francisco'])
     writer.commit()
     # with index.searcher() as searcher:
     #     print(searcher.doc_count_all())
     #     print(searcher.document_number(content="francisco"))
     #     print(len(list(searcher.document_numbers(content="francisco"))))
     #     print(searcher.idf("content", "francisco"))
-    queryList = ["human", "francisco", "human", "human", "human"]
+    queryList = ["francisco", "name"]
     query = whoosh.qparser.QueryParser(
         "content", index.schema, group=whoosh.qparser.OrGroup).parse(str(queryList))
 
@@ -110,7 +107,7 @@ if __name__ == "__main__":
     for i in queryList:
         qfDict[i] = qfDict.get(i, 0) + 1
 
-    print(qfDict)
+    #print(qfDict)
 
     with index.searcher(weighting=DensityDistributions(4, qfDict)) as s:
         results = s.search(query)
