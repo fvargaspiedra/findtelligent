@@ -51,12 +51,17 @@ class DDScorer(whoosh.scoring.BaseScorer):
             finalScore = finalScore + (hanning * weightQueryTerm * self.idf)
         return finalScore
 
+
 class Searching:
+
     def __init__(self, dir):
         self.schema = whoosh.fields.Schema(
             id=whoosh.fields.STORED, content=whoosh.fields.TEXT(stored=True))
         self.index = whoosh.index.create_in(dir, self.schema)
-        self.query = whoosh.qparser.QueryParser("content", self.index.schema, group=whoosh.qparser.OrGroup)
+        self.query = whoosh.qparser.QueryParser(
+            "content", self.index.schema, group=whoosh.qparser.OrGroup)
+        self.query_freq_dictionary = {}
+        self.results_list = []
 
     def index_write(self, collection_dictionary):
         writer = self.index.writer()
@@ -65,14 +70,26 @@ class Searching:
         writer.commit()
 
     def query_write(self, query_list):
-        self.query = self.query.parse(str(query_list))
+        self.query = self.query.parse(
+            str(query_list))
+        for i in query_list:
+            self.query_freq_dictionary[
+                i] = self.query_freq_dictionary.get(i, 0) + 1
 
-    def score_density_distribution(self, window, doc_count, query_freq_dictionary):
-        with self.index.searcher(weighting=DensityDistributions(window, doc_count, query_freq_dictionary)) as s:
+    def score_density_distribution(self, window, doc_count):
+        with self.index.searcher(weighting=DensityDistributions(window, doc_count, self.query_freq_dictionary)) as s:
             results = s.search(self.query)
-            for result in results.items():
-                print(result)
+            for i, score in enumerate(results.items()):
+                self.results_list.append([results.fields(i)['id'], score[1]])
 
+    def get_results(self, top=-1):
+        if top == -1:  
+            return self.results_list
+        elif top >= 1:
+            return self.results_list[0:top]
+        else:
+            #FIXME add error for invalid top value
+            pass
 
 
 if __name__ == "__main__":
@@ -88,14 +105,11 @@ if __name__ == "__main__":
     passage.parse_docs_dd(args.windowsize)
     passage.tokenize_dd()
     simplePassageDict = passage.get_simplify_passage_dd(args.query)
-    tempDict = { 1:['my', 'name', 'is', 'francisco', 'vargas'], 2:['francisco', 'is', 'an', 'electrical', 'engineer'], 3: ['name', 'is', 'francisco', 'vargas', 'francisco']}
-    print(tempDict)
-    queryList = ["francisco", "name"]
-    qfDict = dict()
-    for i in queryList:
-        qfDict[i] = qfDict.get(i, 0) + 1
-
+    tempDict = {101: ['my', 'name', 'is', 'francisco', 'vargas'], 220: ['francisco', 'different', 'different',
+                                                                        'different', 'engineer'], 332: ['name', 'is', 'francisco', 'vargas', 'francisco']}
+    queryList = ["francisco", "name", "different"]
     search = Searching("/tmp/")
     search.index_write(tempDict)
     search.query_write(queryList)
-    search.score_density_distribution(4, 3, qfDict)
+    search.score_density_distribution(4, 3)
+    print(search.get_results())
