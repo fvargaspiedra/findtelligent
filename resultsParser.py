@@ -60,8 +60,11 @@ def results_dd_max_percentage(results_list, collection_dictionary, max_percentag
         if (past < current) and (following < current or following == current):
             max_scores.append(collection_dictionary[element][1])
             max_ids.append(element)
-    max_score_percentage = max(max_scores) * max_percentage * 0.01
-    for index, id in enumerate(max_ids):
-        if max_scores[index] >= max_score_percentage:
-            results.append(id)
-    return results
+    if len(max_ids) != 0:
+        max_score_percentage = max(max_scores) * max_percentage * 0.01
+        for index, id in enumerate(max_ids):
+            if max_scores[index] >= max_score_percentage:
+                results.append(id)
+        return results
+    else:
+        return []

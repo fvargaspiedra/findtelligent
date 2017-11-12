@@ -19,6 +19,7 @@ if __name__ == "__main__":
     passage.parse_docs_dd()
     passage.tokenize_dd()
     simplePassageDict = passage.get_simplify_passage_dd(args.query)
+    #print(passage.get_passage_dictionary())
     query = tokenizer.tokenize_query(args.query)
     search = searching.Searching("/tmp/")
     search.index_write(simplePassageDict)
@@ -27,6 +28,6 @@ if __name__ == "__main__":
     # for rank, i in enumerate(search.get_results()):
     #     print("Rank is: " + str(rank) + " Score is: " + str(i[1]) + " for document " + str(i[0]) + " with content " + passage.get_substring_from_file(i[0]))
     # #for i in search.get_results():
-    resultsList = resultsParser.results_dd_max_percentage(search.get_results(), passage.get_passage_dictionary(), 80)
+    resultsList = resultsParser.results_dd_max_percentage(search.get_results(), passage.get_passage_dictionary(), 60)
     for i in resultsList:
         print(passage.get_substring_from_file(i))
