@@ -76,7 +76,7 @@ class Searching:
 
     def score_density_distribution(self, window, doc_count):
         with self.index.searcher(weighting=DensityDistributions(window, doc_count, self.query_freq_dictionary)) as s:
-            results = s.search(self.query)
+            results = s.search(self.query, limit = None)
             for i, score in enumerate(results.items()):
                 self.results_list.append([results.fields(i)['id'], score[1]])
 
