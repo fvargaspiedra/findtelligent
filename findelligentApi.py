@@ -12,9 +12,10 @@ if __name__ == "__main__":
                            help="Window size in number of words (even number)", type=int)
     argparser.add_argument("-q", "--query",
                            help="Original query from user", type=str)
-    argparser.add_argument(
-        "document", help="Document file as plain text to be ranked", type=str)
+    argparser.add_argument("-u", "--url",
+                           help="URL with the content", type=str)
     args = argparser.parse_args()
+    
     passage = passageRetriever.PassageParser(args.document, args.windowsize)
     passage.parse_docs_dd()
     passage.tokenize_dd()
