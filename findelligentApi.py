@@ -27,6 +27,6 @@ if __name__ == "__main__":
     # for rank, i in enumerate(search.get_results()):
     #     print("Rank is: " + str(rank) + " Score is: " + str(i[1]) + " for document " + str(i[0]) + " with content " + passage.get_substring_from_file(i[0]))
     # #for i in search.get_results():
-    resultsList = resultsParser.results_dd(search.get_results(), passage.get_passage_dictionary())
+    resultsList = resultsParser.results_dd_max_percentage(search.get_results(), passage.get_passage_dictionary(), 80)
     for i in resultsList:
         print(passage.get_substring_from_file(i))

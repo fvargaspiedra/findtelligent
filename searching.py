@@ -69,8 +69,7 @@ class Searching:
         writer.commit()
 
     def query_write(self, query_list):
-        self.query = self.query.parse(
-            str(query_list))
+        self.query = self.query.parse(' '.join(query_list))
         for i in query_list:
             self.query_freq_dictionary[
                 i] = self.query_freq_dictionary.get(i, 0) + 1
