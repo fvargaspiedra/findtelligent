@@ -6,6 +6,7 @@ import whoosh.qparser
 import whoosh.query
 import whoosh.scoring
 import math
+import numpy
 
 
 class DensityDistributions(whoosh.scoring.WeightingModel):
@@ -64,7 +65,7 @@ class Searching:
     def index_write(self, collection_dictionary):
         writer = self.index.writer()
         for lineNum, document in collection_dictionary.items():
-            writer.add_document(id=lineNum, content=document)
+            writer.add_document(id=lineNum, content=document[0])
         writer.commit()
 
     def query_write(self, query_list):
@@ -80,7 +81,7 @@ class Searching:
             for i, score in enumerate(results.items()):
                 self.results_list.append([results.fields(i)['id'], score[1]])
 
-    def get_results(self, top=-1):
+    def get_results_top(self, top = -1):
         if top == -1:  
             return self.results_list
         elif top >= 1:
@@ -88,3 +89,19 @@ class Searching:
         else:
             #FIXME add error for invalid top value
             pass
+
+    def get_results(self):
+        return self.results_list
+
+    # def get_results_percentile(self, percentile):
+    #     scoreList = []
+    #     for i in self.results_list:
+    #         scoreList.append(i[1])
+    #     scoreArray = numpy.array(scoreList)
+    #     perc = numpy.percentile(scoreArray, percentile)
+    #     results_list_percentile = []
+    #     for i in self.results_list:
+    #         if i[1] >= perc:
+    #             results_list_percentile.append(i)
+    #     return results_list_percentile
+

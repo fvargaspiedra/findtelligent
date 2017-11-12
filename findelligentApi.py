@@ -4,6 +4,7 @@ import argparse
 import passageRetriever
 import searching
 import tokenizer
+import resultsParser
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
@@ -14,8 +15,8 @@ if __name__ == "__main__":
     argparser.add_argument(
         "document", help="Document file as plain text to be ranked", type=str)
     args = argparser.parse_args()
-    passage = passageRetriever.PassageParser(args.document)
-    passage.parse_docs_dd(args.windowsize)
+    passage = passageRetriever.PassageParser(args.document, args.windowsize)
+    passage.parse_docs_dd()
     passage.tokenize_dd()
     simplePassageDict = passage.get_simplify_passage_dd(args.query)
     query = tokenizer.tokenize_query(args.query)
@@ -24,5 +25,7 @@ if __name__ == "__main__":
     search.query_write(query)
     search.score_density_distribution(args.windowsize, passage.get_passage_dictionary_size())
     for rank, i in enumerate(search.get_results()):
-        print("Rank is: " + str(rank) + " Score is: " + str(i[1]) + " for document " + str(i[0]) + " with content " + str(simplePassageDict[i[0]]))
-
+        print("Rank is: " + str(rank) + " Score is: " + str(i[1]) + " for document " + str(i[0]) + " with content " + passage.get_substring_from_file(i[0]))
+    #for i in search.get_results():
+    resultsParser.results_dd(search.get_results(), passage.get_passage_dictionary())
+        
