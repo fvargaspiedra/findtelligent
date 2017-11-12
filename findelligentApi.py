@@ -24,8 +24,9 @@ if __name__ == "__main__":
     search.index_write(simplePassageDict)
     search.query_write(query)
     search.score_density_distribution(args.windowsize, passage.get_passage_dictionary_size())
-    for rank, i in enumerate(search.get_results()):
-        print("Rank is: " + str(rank) + " Score is: " + str(i[1]) + " for document " + str(i[0]) + " with content " + passage.get_substring_from_file(i[0]))
-    #for i in search.get_results():
-    resultsParser.results_dd(search.get_results(), passage.get_passage_dictionary())
-        
+    # for rank, i in enumerate(search.get_results()):
+    #     print("Rank is: " + str(rank) + " Score is: " + str(i[1]) + " for document " + str(i[0]) + " with content " + passage.get_substring_from_file(i[0]))
+    # #for i in search.get_results():
+    resultsList = resultsParser.results_dd(search.get_results(), passage.get_passage_dictionary())
+    for i in resultsList:
+        print(passage.get_substring_from_file(i))

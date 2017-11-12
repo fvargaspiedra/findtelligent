@@ -28,4 +28,4 @@ def results_dd(results_list, collection_dictionary):
                 following = collection_dictionary[counter][1]
         if (past < current) and (following < current or following == current):
             max_list.append(element)
-    print(max_list)
+    return max_list
