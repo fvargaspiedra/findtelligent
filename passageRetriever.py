@@ -66,6 +66,12 @@ class PassageParser:
         else:
             return '[^a-zA-Z0-9]*'.join(self.docArray[(element_number - int(self.win_size / 2)):(element_number + int(self.win_size / 2))])
 
+    def get_passages_from_list_regex(self, id_list):
+        passagesDict = {}
+        for i in id_list:
+            passagesDict[i] = self.get_substring_from_file_regex(i)
+        return passagesDict
+
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument("-w", "--windowsize",
