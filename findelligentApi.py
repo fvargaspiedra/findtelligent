@@ -5,6 +5,7 @@ import passageRetriever
 import searching
 import tokenizer
 import resultsParser
+import htmlParser
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
@@ -15,8 +16,8 @@ if __name__ == "__main__":
     argparser.add_argument("-u", "--url",
                            help="URL with the content", type=str)
     args = argparser.parse_args()
-    
-    passage = passageRetriever.PassageParser(args.document, args.windowsize)
+    htmlParser.html_to_text(args.url, "/tmp/findtelligent.html")
+    passage = passageRetriever.PassageParser("/tmp/findtelligent.html", args.windowsize)
     passage.parse_docs_dd()
     passage.tokenize_dd()
     simplePassageDict = passage.get_simplify_passage_dd(args.query)

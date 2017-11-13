@@ -4,7 +4,7 @@ import argparse
 import urllib.request
 import bs4
 
-def htmlToText(url):
+def html_to_text(url, dir):
     response = urllib.request.urlopen(url)
     html = response.read()
     soup = bs4.BeautifulSoup(html, 'html.parser')
@@ -18,7 +18,9 @@ def htmlToText(url):
     chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
     # drop blank lines
     text = '\n'.join(chunk for chunk in chunks if chunk)
-    return text
+    with open(dir, 'w') as f: 
+        f.write(text) 
+    return True
 
 
 if __name__ == "__main__":
@@ -26,5 +28,5 @@ if __name__ == "__main__":
     argparser.add_argument("-u", "--url",
                            help="URL with the content", type=str)
     args = argparser.parse_args()
-    text = htmlToText(args.url)
+    text = html_to_text(args.url)
     print(text)
