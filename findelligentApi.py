@@ -6,6 +6,19 @@ import searching
 import tokenizer
 import resultsParser
 import htmlParser
+import flask
+
+app = flask.Flask(__name__)
+
+@app.route("/api/v1/getbyurl", methods=["GET"])
+def get_by_url():
+    q = flask.request.args.get('q')
+    url = flask.request.args.get('url')
+    method = flask.request.args.get('method')
+
+    return q + "\n" + url + "\n" + method
+
+# def evaluate_html(dir, )
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
@@ -33,3 +46,5 @@ if __name__ == "__main__":
     resultsList = resultsParser.results_dd_max_percentage(search.get_results(), passage.get_passage_dictionary(), 60)
     for i in resultsList:
         print(passage.get_substring_from_file_regex(i))
+
+    app.run(debug=True)
