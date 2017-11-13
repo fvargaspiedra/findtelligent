@@ -60,6 +60,11 @@ class PassageParser:
         else:
             return ' '.join(self.docArray[(element_number - int(self.win_size / 2)):(element_number + int(self.win_size / 2))])
 
+    def get_substring_from_file_regex(self, element_number):
+        if (element_number - self.win_size / 2) < 0:
+            return '[^a-zA-Z0-9]*'.join(self.docArray[0:(element_number + int(self.win_size / 2))])
+        else:
+            return '[^a-zA-Z0-9]*'.join(self.docArray[(element_number - int(self.win_size / 2)):(element_number + int(self.win_size / 2))])
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()

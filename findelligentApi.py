@@ -32,4 +32,4 @@ if __name__ == "__main__":
     # #for i in search.get_results():
     resultsList = resultsParser.results_dd_max_percentage(search.get_results(), passage.get_passage_dictionary(), 60)
     for i in resultsList:
-        print(passage.get_substring_from_file(i))
+        print(passage.get_substring_from_file_regex(i))
