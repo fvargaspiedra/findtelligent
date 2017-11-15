@@ -10,13 +10,21 @@ import flask
 
 app = flask.Flask(__name__)
 
+
 @app.route("/api/v1/getbyurl", methods=["GET"])
 def get_by_url():
     q = flask.request.args.get('q')
     url = flask.request.args.get('url')
     method = flask.request.args.get('method')
     htmlParser.html_to_text(url, "/tmp/findtelligent.html")
-    return flask.jsonify(evaluate_html("/tmp/findtelligent.html", q, method))
+    results = evaluate_html("/tmp/findtelligent.html", q, method)
+    if results:
+        response = flask.make_response(flask.jsonify(evaluate_html("/tmp/findtelligent.html", q, method)), 200)
+        response.headers["Cache-Control"] = "max-age=300"
+        return response
+    else:
+        flask.abort(404)
+
 
 def evaluate_html(dir, query, method):
     if method == "dd":
@@ -29,8 +37,10 @@ def evaluate_html(dir, query, method):
         search = searching.Searching("/tmp/")
         search.index_write(simplePassageDict)
         search.query_write(q)
-        search.score_density_distribution(window, passage.get_passage_dictionary_size())
-        resultsList = resultsParser.results_dd_max_percentage(search.get_results(), passage.get_passage_dictionary(), 60)
+        search.score_density_distribution(
+            window, passage.get_passage_dictionary_size())
+        resultsList = resultsParser.results_dd_max_percentage(
+            search.get_results(), passage.get_passage_dictionary(), 60)
         return passage.get_passages_from_list_regex(resultsList)
     else:
         return []
