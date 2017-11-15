@@ -97,6 +97,22 @@ function saveBackgroundColor(url, color) {
   chrome.storage.sync.set(items);
 }
 
+function callApi(){
+    var userInput = document.getElementById("userInput").value;
+    console.log(userInput);
+}
+
+window.onload=function(){
+  document.getElementById("submitQuery").addEventListener("click", callApi);
+
+  document.getElementById("userInput").addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+        document.getElementById("submitQuery").click();
+    }
+  });
+}
+
 // This extension loads the saved background color for the current tab if one
 // exists. The user can select a new background color from the dropdown for the
 // current page, and it will be saved as part of the extension's isolated
@@ -105,24 +121,24 @@ function saveBackgroundColor(url, color) {
 // to a document's origin. Also, using chrome.storage.sync instead of
 // chrome.storage.local allows the extension data to be synced across multiple
 // user devices.
-document.addEventListener('DOMContentLoaded', () => {
-  getCurrentTabUrl((url) => {
-    var dropdown = document.getElementById('dropdown');
+// document.addEventListener('DOMContentLoaded', () => {
+//   getCurrentTabUrl((url) => {
+//     var dropdown = document.getElementById('dropdown');
 
-    // Load the saved background color for this page and modify the dropdown
-    // value, if needed.
-    getSavedBackgroundColor(url, (savedColor) => {
-      if (savedColor) {
-        changeBackgroundColor(savedColor);
-        dropdown.value = savedColor;
-      }
-    });
+//     // Load the saved background color for this page and modify the dropdown
+//     // value, if needed.
+//     getSavedBackgroundColor(url, (savedColor) => {
+//       if (savedColor) {
+//         changeBackgroundColor(savedColor);
+//         dropdown.value = savedColor;
+//       }
+//     });
 
-    // Ensure the background color is changed and saved when the dropdown
-    // selection changes.
-    dropdown.addEventListener('change', () => {
-      changeBackgroundColor(dropdown.value);
-      saveBackgroundColor(url, dropdown.value);
-    });
-  });
-});
+//     // Ensure the background color is changed and saved when the dropdown
+//     // selection changes.
+//     dropdown.addEventListener('change', () => {
+//       changeBackgroundColor(dropdown.value);
+//       saveBackgroundColor(url, dropdown.value);
+//     });
+//   });
+// });
