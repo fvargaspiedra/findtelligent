@@ -67,10 +67,13 @@ class PassageParser:
             return '[^a-zA-Z0-9]*'.join(self.docArray[(element_number - int(self.win_size / 2)):(element_number + int(self.win_size / 2))])
 
     def get_passages_from_list_regex(self, id_list):
-        passagesDict = {}
+        passagesList = []
         for i in id_list:
-            passagesDict[i] = self.get_substring_from_file_regex(i)
-        return passagesDict
+            tempDict = { 'id': i, 'regexp': self.get_substring_from_file_regex(i)}
+            #passagesDict["id"] = self.get_substring_from_file_regex(i)
+            #passagesDict[i] = self.get_substring_from_file_regex(i)
+            passagesList.append(tempDict)
+        return passagesList
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()

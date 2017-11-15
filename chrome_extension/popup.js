@@ -98,8 +98,28 @@ function saveBackgroundColor(url, color) {
 }
 
 function callApi(){
-    var userInput = document.getElementById("userInput").value;
-    console.log(userInput);
+  var userInput = document.getElementById("userInput").value;
+  console.log(userInput);
+
+  var xmlhttp = new XMLHttpRequest();
+  var url = "http://localhost:5000/api/v1/getbyurl?q=awards%20received&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTim_Berners-Lee&method=dd";
+
+  xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var myArr = JSON.parse(this.responseText);
+      myFunction(myArr);
+    }
+  };
+  xmlhttp.open("GET", url, true);
+  xmlhttp.send();
+
+  function myFunction(arr) {
+    var out = "";
+    var i;
+    for(i = 0; i < arr.length; i++) {
+        console.log(arr[i].id);
+    }
+  }
 }
 
 window.onload=function(){

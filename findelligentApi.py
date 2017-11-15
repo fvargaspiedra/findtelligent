@@ -19,8 +19,10 @@ def get_by_url():
     htmlParser.html_to_text(url, "/tmp/findtelligent.html")
     results = evaluate_html("/tmp/findtelligent.html", q, method)
     if results:
-        response = flask.make_response(flask.jsonify(evaluate_html("/tmp/findtelligent.html", q, method)), 200)
+        #jsonStr = flask.json.dumps(results)
+        response = flask.make_response(flask.jsonify(results), 200)
         response.headers["Cache-Control"] = "max-age=300"
+        response.headers["Access-Control-Allow-Origin"] = "*"
         return response
     else:
         flask.abort(404)
