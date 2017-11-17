@@ -6,7 +6,7 @@
   "version": "1.0",
   "content_scripts": [{
      "matches": ["http://*/*", "https://*/*"],
-     "js": ["contentscript.js"]
+     "js": ["contentscript.js", "mark.js"]
   }],
 
   "browser_action": {

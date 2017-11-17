@@ -93,13 +93,18 @@ function callApi(url){
   function myFunction(arr) {
     var out = "";
     var i;
-    for(i = 0; i < arr.length; i++) {
-      var re = new RegExp(arr[i].regexp, "gmi")
-      chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-        chrome.tabs.sendMessage(tabs[0].id, {todo: "highlight", regex: re})
-      })
-      console.log(arr[i].regexp);
-    }
+    var re;
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+      chrome.tabs.sendMessage(tabs[0].id, {todo: "highlight", regex: arr})
+    })
+    console.log(arr.type)
+    // for(i = 0; i < arr.length; i++) {
+    //   re = String(arr[i].regexp)
+    //   chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+    //     chrome.tabs.sendMessage(tabs[0].id, {todo: "highlight", regex: re})
+    //   })
+    //   console.log(arr[i].regexp);
+    // }
   }
 }
 
