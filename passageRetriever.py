@@ -3,6 +3,7 @@
 import argparse
 import nltk
 import tokenizer
+import re
 
 
 class PassageParser:
@@ -62,9 +63,11 @@ class PassageParser:
 
     def get_substring_from_file_regex(self, element_number):
         if (element_number - self.win_size / 2) < 0:
-            return '[^a-zA-Z0-9]*'.join(self.docArray[0:(element_number + int(self.win_size / 2))])
+            escapedList = (re.escape(i) for i in self.docArray[0:(element_number + int(self.win_size / 2))])
+            return '[^a-zA-Z0-9]*'.join(escapedList)
         else:
-            return '[^a-zA-Z0-9]*'.join(self.docArray[(element_number - int(self.win_size / 2)):(element_number + int(self.win_size / 2))])
+            escapedList = (re.escape(i) for i in self.docArray[(element_number - int(self.win_size / 2)):(element_number + int(self.win_size / 2))])
+            return '[^a-zA-Z0-9]*'.join(escapedList)
 
     def get_passages_from_list_regex(self, id_list):
         passagesList = []
