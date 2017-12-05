@@ -1,12 +1,18 @@
-#!/usr/bin/env python3
+"""Passage retriever for Findtelligent.
 
+.. module::passageRetriever
+   :synopsis: Passage Retriever module to generate and tokenize a list 
+   of passages depending on the scoring method.
+
+.. moduleauthor:: Francisco Vargas <fvargaspiedra@gmail.com>
+"""
 
 def results_dd(results_list, collection_dictionary):
     for i in results_list:
         collection_dictionary[i[0]][1] = i[1]
     max_list = []
     for element in range(0, len(collection_dictionary)):
-        #print(collection_dictionary[element][1])
+        # print(collection_dictionary[element][1])
         # print("For document: " + str(element))
         current = collection_dictionary[element][1]
         if element == 0:
@@ -30,6 +36,7 @@ def results_dd(results_list, collection_dictionary):
             max_list.append(element)
     return max_list
 
+
 def results_dd_max_percentage(results_list, collection_dictionary, max_percentage):
     for i in results_list:
         collection_dictionary[i[0]][1] = i[1]
@@ -37,7 +44,7 @@ def results_dd_max_percentage(results_list, collection_dictionary, max_percentag
     max_scores = []
     max_ids = []
     for element in range(0, len(collection_dictionary)):
-        #print(collection_dictionary[element][1])
+        # print(collection_dictionary[element][1])
         # print("For document: " + str(element))
         current = collection_dictionary[element][1]
         if element == 0:

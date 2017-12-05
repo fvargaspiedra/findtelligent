@@ -1,4 +1,11 @@
-#!/usr/bin/env python3
+"""Passage retriever for Findtelligent.
+
+.. module::passageRetriever
+   :synopsis: Passage Retriever module to generate and tokenize a list 
+   of passages depending on the scoring method.
+
+.. moduleauthor:: Francisco Vargas <fvargaspiedra@gmail.com>
+"""
 
 import argparse
 import nltk
@@ -6,24 +13,56 @@ import tokenizer
 import re
 
 
-class PassageParser:
-    """ Transform plain text into hash table with passages and their vector of strings """
+class PassageParser(object):
+    """Class to manage all the parsing process by passage.
+
+    Each scoring method would require a different passage parsing. The
+    general idea is to take a text document and create pseudo-documents
+    by extracting passages using different techniques. 
+
+    In this case a windows based technique is implemented for Density 
+    Distribution, but this should be easily expandible to other techniques.
+
+    Every function that ends with _dd sufix is specific for Density Distribution
+    passage retrieval algorithm.
+
+    """
 
     def __init__(self, document, window_size):
-        """ Constructor """
+        """Construct a PassageParser object.
+
+        :param document: Absolute path to text document to be parsed.
+        :type document: str.
+        :param window_size: Window size of passages to be parsed.
+        :type window_size: int.
+
+        """
         self.doc = document
-        self.passageDictionary = {}
         self.win_size = window_size
-        self.docArray = [word for line in open(self.doc, 'r') for word in line.split()]
+        # Empty dictionary of passages, the key will represent
+        # a unique ID and the value the passage itself.
+        self.passageDictionary = {}
+        self.docArray = [word for line in open(
+            self.doc, 'r') for word in line.split()]
 
     def parse_docs_dd(self):
-        """ Generate passages by window, one passage by word """
-        # TBD: Add window_size verification (even number)
+        """Obtain pseudo-documents from text document.
+
+        Divide a text document by passages based on a window size. For
+        Density Distribution algorithm each word will represent a passage
+        with a left and right window.
+
+        This function will populate the attribute passageDictionary.
+
+        """
+        # TODO: Add window_size verification (even number)
         for index in range(0, len(self.docArray)):
             windowLeft = int(index - (self.win_size / 2))
             windowRight = int(index + (self.win_size / 2))
             tempPassageList = []
             for current in range(windowLeft, windowRight + 1):
+                # Fill dictionary with empty strings when the position
+                # is outside the document.
                 if current < 0:
                     tempPassageList.append("")
                 elif current > len(self.docArray) - 1:
@@ -33,13 +72,23 @@ class PassageParser:
             self.passageDictionary[index] = [tempPassageList, 0.0]
 
     def tokenize_dd(self):
-        """ Tokenize a list of lists of strings. Apply stemming and remove stop words without affecting list structure.  """
+        """Tokenize the passage dictionary. """
         for line, document in self.passageDictionary.items():
             for index, word in enumerate(document[0]):
                 document[0][index] = tokenizer.tokenize_doc_word(word)
             self.passageDictionary[line] = document
 
     def get_simplify_passage_dd(self, query):
+        """Get a simplified version of the passage dictionary.
+        
+        This function returns only those passages that include
+        a term that is part of the query and the passage.
+        
+        :param query: Query to get the relevant passages.
+        :type query: str.
+        :returns:  dictionary -- A passage dictionary of only the intersection between a passage and the query terms.
+
+        """
         tokQuery = tokenizer.tokenize_query(query)
         tokQuery = set(tokQuery)
         tempPassageDictionary = {}
@@ -50,9 +99,19 @@ class PassageParser:
         return tempPassageDictionary
 
     def get_passage_dictionary(self):
+        """Getter of passage dictionary.
+
+        :returns:  dictionary -- The passage dictionary.
+
+        """
         return self.passageDictionary
 
     def get_passage_dictionary_size(self):
+        """Size of passage dictionary.
+
+        :returns:  int -- Number of passages in the dictionary.
+
+        """
         return len(self.passageDictionary)
 
     def get_substring_from_file(self, element_number):
@@ -63,22 +122,26 @@ class PassageParser:
 
     def get_substring_from_file_regex(self, element_number):
         if (element_number - self.win_size / 2) < 0:
-            escapedList = (re.escape(i) for i in self.docArray[0:(element_number + int(self.win_size / 2))])
+            escapedList = (re.escape(i) for i in self.docArray[
+                           0:(element_number + int(self.win_size / 2))])
             return '[^a-zA-Z0-9]*'.join(escapedList)
         else:
-            escapedList = (re.escape(i) for i in self.docArray[(element_number - int(self.win_size / 2)):(element_number + int(self.win_size / 2))])
+            escapedList = (re.escape(i) for i in self.docArray[
+                           (element_number - int(self.win_size / 2)):(element_number + int(self.win_size / 2))])
             return '[^a-zA-Z0-9]*'.join(escapedList)
 
     def get_passages_from_list_regex(self, id_list):
         passagesList = []
         for i in id_list:
-            tempDict = { 'id': i, 'regexp': self.get_substring_from_file_regex(i)}
+            tempDict = {
+                'id': i, 'regexp': self.get_substring_from_file_regex(i)}
             #passagesDict["id"] = self.get_substring_from_file_regex(i)
             #passagesDict[i] = self.get_substring_from_file_regex(i)
             passagesList.append(tempDict)
         return passagesList
 
 if __name__ == "__main__":
+    # Dummy main to test the modile independently
     argparser = argparse.ArgumentParser()
     argparser.add_argument("-w", "--windowsize",
                            help="Window size in number of words (even number)", type=int)

@@ -1,4 +1,11 @@
-#!/usr/bin/env python3
+"""Passage retriever for Findtelligent.
+
+.. module::passageRetriever
+   :synopsis: Passage Retriever module to generate and tokenize a list 
+   of passages depending on the scoring method.
+
+.. moduleauthor:: Francisco Vargas <fvargaspiedra@gmail.com>
+"""
 
 import argparse
 import nltk

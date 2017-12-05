@@ -1,4 +1,11 @@
-#!/usr/bin/env python3
+"""Passage retriever for Findtelligent.
+
+.. module::passageRetriever
+   :synopsis: Passage Retriever module to generate and tokenize a list 
+   of passages depending on the scoring method.
+
+.. moduleauthor:: Francisco Vargas <fvargaspiedra@gmail.com>
+"""
 
 import whoosh.fields
 import whoosh.index
@@ -76,17 +83,17 @@ class Searching:
 
     def score_density_distribution(self, window, doc_count):
         with self.index.searcher(weighting=DensityDistributions(window, doc_count, self.query_freq_dictionary)) as s:
-            results = s.search(self.query, limit = None)
+            results = s.search(self.query, limit=None)
             for i, score in enumerate(results.items()):
                 self.results_list.append([results.fields(i)['id'], score[1]])
 
-    def get_results_top(self, top = -1):
-        if top == -1:  
+    def get_results_top(self, top=-1):
+        if top == -1:
             return self.results_list
         elif top >= 1:
             return self.results_list[0:top]
         else:
-            #FIXME add error for invalid top value
+            # FIXME add error for invalid top value
             pass
 
     def get_results(self):
@@ -103,4 +110,3 @@ class Searching:
     #         if i[1] >= perc:
     #             results_list_percentile.append(i)
     #     return results_list_percentile
-
