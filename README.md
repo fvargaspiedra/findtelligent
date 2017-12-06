@@ -28,7 +28,7 @@ Kise, Junke, Dengel, and Matsumoto [1] proposed a method to retrieve the most im
 
 Below you can find a high-level block diagram of the structure of the software. It shows the /getbyurl API functionality which is the only one implemented so far. In the future a /getbyhtml should be included because some URLs are private and the API won't be able to retrieve the HTML in those case, so the HTML itself must be passed in the body of the request.
 
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Block Diagram of Findtelligent API")
+![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/BlockDiagram.png "Block Diagram of Findtelligent API")
 
 
 References
