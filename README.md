@@ -1,4 +1,6 @@
-# findtelligent
+Findtelligent
+=============
+
 Please run the following commands before using it:
 
 python -m nltk.downloader punkt stopwords

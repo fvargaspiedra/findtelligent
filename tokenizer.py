@@ -1,8 +1,7 @@
-"""Passage retriever for Findtelligent.
+"""Tokenizer for Findtelligent.
 
-.. module::passageRetriever
-   :synopsis: Passage Retriever module to generate and tokenize a list 
-   of passages depending on the scoring method.
+.. module::tokenizer
+   :synopsis: Tokenizer module to tokenize the query and the passages.
 
 .. moduleauthor:: Francisco Vargas <fvargaspiedra@gmail.com>
 """
@@ -38,6 +37,7 @@ def tokenize_doc_word(word):
     return tokenized_doc_word
 
 if __name__ == "__main__":
+    # Dummy main to test the module independently
     argparser = argparse.ArgumentParser()
     argparser.add_argument("-q", "--query",
                            help="Original query from end user", type=str)

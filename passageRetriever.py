@@ -115,12 +115,26 @@ class PassageParser(object):
         return len(self.passageDictionary)
 
     def get_substring_from_file(self, element_number):
+        """Get a passage based on a word number.
+
+        :param element_number: Number of the word.
+        :type element_number: int.        
+        :returns:  str -- The passage corresponding to the number of the word requested.
+
+        """
         if (element_number - self.win_size / 2) < 0:
             return ' '.join(self.docArray[0:(element_number + int(self.win_size / 2))])
         else:
             return ' '.join(self.docArray[(element_number - int(self.win_size / 2)):(element_number + int(self.win_size / 2))])
 
     def get_substring_from_file_regex(self, element_number):
+        """Get a passage based on a word number with RegEx form.
+
+        :param element_number: Number of the word.
+        :type element_number: int.        
+        :returns:  str -- The passage in RegEx form corresponding to the number of the word requested.
+
+        """
         if (element_number - self.win_size / 2) < 0:
             escapedList = (re.escape(i) for i in self.docArray[
                            0:(element_number + int(self.win_size / 2))])
@@ -131,12 +145,17 @@ class PassageParser(object):
             return '[^a-zA-Z0-9]*'.join(escapedList)
 
     def get_passages_from_list_regex(self, id_list):
+        """Get a list of passages based on a list of word numbers (ids) with RegEx form.
+
+        :param id_list: List of IDs (or word numbers).
+        :type id_list: list.        
+        :returns:  str -- A list of passages in RegEx form corresponding to the list of ids requested.
+
+        """
         passagesList = []
         for i in id_list:
             tempDict = {
                 'id': i, 'regexp': self.get_substring_from_file_regex(i)}
-            #passagesDict["id"] = self.get_substring_from_file_regex(i)
-            #passagesDict[i] = self.get_substring_from_file_regex(i)
             passagesList.append(tempDict)
         return passagesList
 
