@@ -4,11 +4,13 @@ Findtelligent
 What is Findtelligent?
 ----------------------
 
+Findtelligent is the smart substitute of browser's CTRL + F. No more exact matches! It gives you the possibility of executing queries (as in a Search Engine) to find information in a large HTML.
+
 Findtelligent is composed of two parts. An API for functionality and a Chrome Extension for usability.
 
-1. API: allow you to get the most relevant passages in an HTML document based on a query.
+1. API: it allows you to get the most relevant passages in an HTML document based on a query.
 
-2. Chrome Extension: allow you to submit your query and automatically connects to the API, execute the query and highlight the relevant passages in the HTML in real time.
+2. Chrome Extension: it allows you to submit your query and automatically call the API, execute the query and highlight the relevant passages in the HTML in real time.
 
 Why Findtelligent?
 ------------------
@@ -44,13 +46,34 @@ Finally the data is parsed in JSON format to be delivered by the API. Following 
 
 Request:
 
-![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/RequestAPI.png "Block Diagram of Findtelligent API")
+![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/RequestAPI.png "GetByUrl request API")
 
 Response:
 
-![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/ResponseAPI.png "Block Diagram of Findtelligent API")
+![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/ResponseAPI.png "GetByUrl response API")
 
 Notice the RegEx form on the response which is really useful to highlight the HTML using Mark.js library.
+
+What about the Chrome Extension?
+--------------------------------
+
+The Chrome Extension is composed by two components:
+
+1. Popup logic
+2. Content logic
+
+The popup logic includes an HTML and a JS file. The HTML is an extremely simple Front End with a blank space and a submit button so the user can enter a query and submit it. The JS will listen to a "click" or "enter key" event and execute an API call based on the information of the current tab. By now the API call is done to localhost. This can be easily change to point to any public host if the API wants to be publicly available.
+
+Once the call is answered, a message is sent to what Chrome's developers called a content script.
+
+The content logic is composed by a content JS and Mark.js library. The content JS is listening to messages from the popup JS. Once it receives a message it will use Mark.js to highlight the relevant passages using the RegEx form coming from the API. This is the easiest way to avoid problems with weird characters.
+
+Below you can see an example. We are trying to find the "awards received by Vint Cerf" on a Wikipedia page. Notice the highlighted information after submitting the request.
+
+![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/FindtelligentCapture.png "Findtelligent on action")
+
+How to install?
+---------------
 
 References
 ----------
