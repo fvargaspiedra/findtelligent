@@ -92,7 +92,7 @@ There are two independent elements in Findtelligent: the API and the Chrome Exte
 		* Requests
 		* Urllib
 		* Whoosh
-	* Web server: Flask can run using a web server or as developer mode. If you want to install a fixed instance of Findtelligent API you must install a web server or use a hosting option. Flask documentation explains how to do it using Apache, Nginx, etc. [here](http://flask.pocoo.org/docs/0.12/deploying/#self-hosted-options). You can also consider use other hosting options like Heroku by following [these](http://flask.pocoo.org/docs/0.12/deploying/#hosted-options) instructions.
+	* Web server: Flask can be run using a web server or the developer mode's web server. If you want to install a fixed instance of Findtelligent API you must install a web server or use a hosting option. Flask documentation explains how to do it using Apache, Nginx, etc. [here](http://flask.pocoo.org/docs/0.12/deploying/#self-hosted-options). You can also consider use other hosting options like Heroku by following [these](http://flask.pocoo.org/docs/0.12/deploying/#hosted-options) instructions.
 
 * __Chrome Extension__: the Chrome Extension is still not publicly available on the Market Place because there is still no a fixed public instance of the API. Then, in order to install the extension locally you'll need to follow [these](https://developer.chrome.com/extensions/getstarted#unpacked) instructions.
 
@@ -101,7 +101,7 @@ How to use it?
 
 Since there is no a fixed and public instance of the API yet, then you'll need to run the API locally. To do this you must follow these steps:
 
-1. Open your virtual environment for Python 3.6.2 `$source ~/.yourEnvs/findtelligent/bin/activate` (you first need to set it up like [here](http://libzx.so/main/learning/2016/03/13/best-practice-for-virtualenv-and-git-repos.html)).
+1. Open your virtual environment for Python 3.6.2 `$source ~/.yourEnvs/findtelligent/bin/activate` (you first need to set it up like [here](http://libzx.so/main/learning/2016/03/13/best-practice-for-virtualenv-and-git-repos.html)). You'll also need to install all the dependencies on that virtual environment (`$pip3 install -r requirements.txt`).
 2. Clone the repository and go to the root directory of it.
 3. Export the following Flask variables: `$export FLASK_APP=findelligentApi.py` and `$export FLASK_DEBUG=1`.
 4. Run Flask's developer mode web server: `$python -m flask run`. You should see something like the image below.
@@ -120,10 +120,16 @@ Since there is no a fixed and public instance of the API yet, then you'll need t
 
 ![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/Example.png "Example")
 
+You can also test the API directly without the Chrome Extension by calling it on any browser as shown below.
+
+![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/APIcall.png "API call")
+
+The call shown on the image in case you want to test is: http://localhost:5000/api/v1/getbyurl?q=awards%20received&url=https://en.wikipedia.org/wiki/Tim_Berners-Lee&method=dd
+
 Evaluation
 ----------
 
-No similar tools were found to compare with Findtelligent. The closest way to evaluate Findtelligent is by comparing the use of CTRL + F and Findtelligent. The difference is extremely intuitive, and both can be used for different goal, so there is no a quantitative method to compare them.
+No similar tools were found to compare with Findtelligent. The closest way to evaluate Findtelligent is by comparing the use of CTRL + F and Findtelligent. The difference is extremely intuitive, and both can be used for different goals, so there is no a quantitative method to compare them.
 
 Let's inspect one use case for qualitative comparison. Let's say that you'd like to find the causes of extinction in a Wikipedia Evolution article. You can type on Findtelligent "Extinction causes" and get passages that are likely related to the topic. Below you can see some examples of the output.
 
