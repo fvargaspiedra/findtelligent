@@ -78,14 +78,13 @@ How to install?
 There are two independent elements in Findtelligent: the API and the Chrome Extension.
 
 * __API__: to install the API you'll need Python 3.6.2 and a web server. A Python virtual environment is recommended to avoid any confusion with old installed libraries.
-    * Python: you need to install the following libraries
+    * Python: Please use the requirements.txt file to install the Python libraries (`pip3 install -r requirements.txt`) instead of doing it manually. You'll also need to install some stopwords packets for NLTK (`python -m nltk.downloader punkt stopwords`). Some of the libraries you'll need are:
         * Beautifulsoup 4
 		* Flask
 		* NLTK
 		* Requests
 		* Urllib
 		* Whoosh
-	Please use the requirements.txt file to install the Python libraries (`pip3 install -r requirements.txt`) instead of doing it manually. You'll also need to install some stopwords packets for NLTK (`python -m nltk.downloader punkt stopwords`)
 	* Web server: Flask can run using a web server or as developer mode. If you want to install a fixed instance of Findtelligent API you must install a web server or use a hosting option. Flask documentation explain how to do it using Apache, Nginx, etc. [here](http://flask.pocoo.org/docs/0.12/deploying/#self-hosted-options). You can also consider use other hosting options like Heroku by following [these](http://flask.pocoo.org/docs/0.12/deploying/#hosted-options) instructions.
 
 * __Chrome Extension__: the Chrome Extension is still not publicly available on the Market Place because there is still no a fixed instance of the API. Then, in order to install the extension locally you'll need to follow [these](https://developer.chrome.com/extensions/getstarted#unpacked) instructions.
