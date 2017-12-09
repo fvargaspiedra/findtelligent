@@ -10,16 +10,16 @@ Findtelligent is the smart substitute of browser's CTRL + F. No more exact match
 
 Findtelligent is composed of two parts. An API for functionality and a Chrome Extension for usability.
 
-1. API: it allows you to get the most relevant passages in an HTML document based on a query.
+1. __API__: it allows you to get the most relevant passages in an HTML document based on a query.
 
-2. Chrome Extension: it allows you to submit your query and automatically call the API, execute the query and highlight the relevant passages in the HTML in real time.
+2. __Chrome Extension__: it allows you to submit your query and automatically call the API, execute the query and highlight the relevant passages in the HTML in real time.
 
 Why Findtelligent?
 ------------------
 
 Usually Ctrl + F is not enough when searching the web. It uses an exact match instead of a free open query. 
 
-Sometimes you are struggling with a huge HTML document such as a Wiki article, a User Guide, or even an e-book. With Findtelligent you can use a query instead of an exact match and get the passages that more likely to contain the answer to your query.
+Sometimes you are struggling with a huge HTML document such as a Wiki article, a User Guide, or even an e-book. With Findtelligent you can use a query instead of an exact match and get the passages that more likely contain the answer to your query.
 
 What is Findtelligent's architecture?
 -------------------------------------
@@ -36,7 +36,7 @@ Below you can find a high-level block diagram of the structure of the software. 
 
 The Chrome Extension communicates the query, the URL of the HTML, and the scoring method to the API. The Flask route gets the request and pass the information of the URL to an HTML parser which retrieves the HTML using Beautiful Soup and urllib and transforms it to a plain text document. This plain text document and the query are passed to a passage retriever module which divides it into smaller passages based on a window size.
 
-Both, the query and the passages created by the passage retriever go through a tokenizer module which removes stopwords and stemmize the words using NLTK. The passage retriever also generates a simplified version of the passages by getting rid of those passages that don´t include any query term. The idea is to save time.
+Both, the query and the passages created by the passage retriever, go through a tokenizer module which removes stopwords and stemmize the words using NLTK. The passage retriever also generates a simplified version of the passages by getting rid of those passages that don´t include any query term. The idea is to save time.
 
 The simplified and tokenized passage list combined with the tokenized query go to a searching module which uses Whoosh library to index and score. The score function is a customized implementation that follows the algorithm proposed by Kise, Junke, Dengel, and Matsumoto [1].
 
@@ -79,7 +79,7 @@ How to install?
 
 There are two independent elements in Findtelligent: the API and the Chrome Extension.
 
-* __API__: to install the API you'll need Python 3.6.2 and a web server. A Python virtual environment is recommended to avoid any confusion with old installed libraries.
+* __API__: to install the API you'll need Python 3.6.2 and a web server. A Python [virtual environment](http://libzx.so/main/learning/2016/03/13/best-practice-for-virtualenv-and-git-repos.html) is recommended to avoid any confusion with old installed libraries.
     * Python: Please use the requirements.txt file to install the Python libraries (`$pip3 install -r requirements.txt`) instead of doing it manually. You'll also need to install some stopwords packets for NLTK (`$python -m nltk.downloader punkt stopwords`). Some of the libraries you'll need are:
         * Beautifulsoup 4
 		* Flask
@@ -87,9 +87,9 @@ There are two independent elements in Findtelligent: the API and the Chrome Exte
 		* Requests
 		* Urllib
 		* Whoosh
-	* Web server: Flask can run using a web server or as developer mode. If you want to install a fixed instance of Findtelligent API you must install a web server or use a hosting option. Flask documentation explain how to do it using Apache, Nginx, etc. [here](http://flask.pocoo.org/docs/0.12/deploying/#self-hosted-options). You can also consider use other hosting options like Heroku by following [these](http://flask.pocoo.org/docs/0.12/deploying/#hosted-options) instructions.
+	* Web server: Flask can run using a web server or as developer mode. If you want to install a fixed instance of Findtelligent API you must install a web server or use a hosting option. Flask documentation explains how to do it using Apache, Nginx, etc. [here](http://flask.pocoo.org/docs/0.12/deploying/#self-hosted-options). You can also consider use other hosting options like Heroku by following [these](http://flask.pocoo.org/docs/0.12/deploying/#hosted-options) instructions.
 
-* __Chrome Extension__: the Chrome Extension is still not publicly available on the Market Place because there is still no a fixed instance of the API. Then, in order to install the extension locally you'll need to follow [these](https://developer.chrome.com/extensions/getstarted#unpacked) instructions.
+* __Chrome Extension__: the Chrome Extension is still not publicly available on the Market Place because there is still no a fixed public instance of the API. Then, in order to install the extension locally you'll need to follow [these](https://developer.chrome.com/extensions/getstarted#unpacked) instructions.
 
 How to use it?
 --------------
@@ -98,12 +98,12 @@ Since there is no a fixed and public instance of the API yet, then you'll need t
 
 1. Open your virtual environment for Python 3.6.2 `$source ~/.yourEnvs/findtelligent/bin/activate` (you first need to set it up like [here](http://libzx.so/main/learning/2016/03/13/best-practice-for-virtualenv-and-git-repos.html)).
 2. Clone the repository and go to the root directory of it.
-3. Export the following Flask variables: `$export FLASK_APP=findelligentApi.py`.
-4. Run Flask's develope mode web server: `$python -m flask run`. You should see something like the image below.
+3. Export the following Flask variables: `$export FLASK_APP=findelligentApi.py` and `$export FLASK_DEBUG=1`.
+4. Run Flask's developer mode web server: `$python -m flask run`. You should see something like the image below.
 
 ![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/Flask.png "Flask execution")
 
-5. Now you have a local instance of the API running. It's time to open Chrome and install the extension by following [this](https://developer.chrome.com/extensions/getstarted#unpacked) instructions. The directory that you need to select when click on "Load Unpacked extension..." is the `chrome_extension` directory in the repo. You should see something similar as below:
+5. Now you have a local instance of the API running. It's time to open Chrome and install the extension by following [these](https://developer.chrome.com/extensions/getstarted#unpacked) instructions. The directory that you need to select when click on "Load Unpacked extension..." is the `chrome_extension` directory in the repo. You should see something similar as below:
 
 ![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/Extension.png "Chrome Extension")
 
@@ -111,19 +111,34 @@ Since there is no a fixed and public instance of the API yet, then you'll need t
 
 ![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/FindtelligentIcon.png "Click icon")
 
-7. Click submit or press enter and wait for a bit. If there are possible answers for your query you'll see then highlighted. In the example below we looked for "Vint Cerf awards" in his Wikipedia page.
+7. Click submit or press enter and wait for a bit (__don't click on any other Chrome's tab while the process is running, if you do so you'll lose the results__). If there are possible answers for your query you'll see them highlighted. In the example below we looked for "Vint Cerf awards" in his Wikipedia page.
 
 ![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/Example.png "Example")
 
+Evaluation
+----------
+
+No similar tools were found to compare with Findtelligent. The closest way to evaluate Findtelligent is by comparing the use of CTRL + F and Findtelligent. The difference is extremely intuitive, and both can be used for different goal, so there is no a quantitative method to compare them.
+
+Let's inspect one use case for qualitative comparison. Let's say that you'd like to find the causes of extinction in a Wikipedia Evolution article. You can type on Findtelligent "Extinction causes" and get passages that are likely related to the topic. Below you can see some examples of the output.
+
+![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/Example2.png "Example 2")
+
+There is no way to find that answer by using CTRL + F. The closest way would be to first try to look for the word Extinction and going over each match to find if it talks about extinction causes. This is precisely the kind of issues Findtelligent is meant to solve.
+
 What should be improved?
 ------------------------
+
+Even though the list of improvements is big, the idea is innovative and can be extrapolated to other use cases. There is no something alike out there, so the project worth to continue its development until reach a mature point.
 
 * The scoring process must be done using parallel processing. Map Reduce it's a good candidate.
 * Implement getbyhtml in the API. Currently only getbyurl is implemented, which means that the API is retrieving the HTML locally. This is not good in a case where the URL is private because the API is not going to be able to get the HTML, therefore, a new API endpoint must allow to pass the HTML directly in the body of the request.
 * Add exceptions handling.
 * Add logging functionality to the API.
 * Add a "Find Next" button in the Chrome Extension so you can easily go to the highlighted sections.
-* Add loading status to the extension.
+* Add query processing status to the extension so the user can know whether the query was submitted and are waiting to get the answer from the API.
+* Support for other languages (not only English).
+* Add "question type" phase to understand what kind of question the query is trying to answer. This will give more accurate results.
 
 References
 ----------
