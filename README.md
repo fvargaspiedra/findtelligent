@@ -1,6 +1,8 @@
 Findtelligent
 =============
 
+![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/logo.png "Logo")
+
 What is Findtelligent?
 ----------------------
 
@@ -78,7 +80,7 @@ How to install?
 There are two independent elements in Findtelligent: the API and the Chrome Extension.
 
 * __API__: to install the API you'll need Python 3.6.2 and a web server. A Python virtual environment is recommended to avoid any confusion with old installed libraries.
-    * Python: Please use the requirements.txt file to install the Python libraries (`pip3 install -r requirements.txt`) instead of doing it manually. You'll also need to install some stopwords packets for NLTK (`python -m nltk.downloader punkt stopwords`). Some of the libraries you'll need are:
+    * Python: Please use the requirements.txt file to install the Python libraries (`$pip3 install -r requirements.txt`) instead of doing it manually. You'll also need to install some stopwords packets for NLTK (`$python -m nltk.downloader punkt stopwords`). Some of the libraries you'll need are:
         * Beautifulsoup 4
 		* Flask
 		* NLTK
@@ -89,15 +91,41 @@ There are two independent elements in Findtelligent: the API and the Chrome Exte
 
 * __Chrome Extension__: the Chrome Extension is still not publicly available on the Market Place because there is still no a fixed instance of the API. Then, in order to install the extension locally you'll need to follow [these](https://developer.chrome.com/extensions/getstarted#unpacked) instructions.
 
+How to use it?
+--------------
+
+Since there is no a fixed and public instance of the API yet, then you'll need to run the API locally. To do this you must follow these steps:
+
+1. Open your virtual environment for Python 3.6.2 `$source ~/.yourEnvs/findtelligent/bin/activate` (you first need to set it up like [here](http://libzx.so/main/learning/2016/03/13/best-practice-for-virtualenv-and-git-repos.html)).
+2. Clone the repository and go to the root directory of it.
+3. Export the following Flask variables: `$export FLASK_APP=findelligentApi.py`.
+4. Run Flask's develope mode web server: `$python -m flask run`. You should see something like the image below.
+
+![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/Flask.png "Flask execution")
+
+5. Now you have a local instance of the API running. It's time to open Chrome and install the extension by following [this](https://developer.chrome.com/extensions/getstarted#unpacked) instructions. The directory that you need to select when click on "Load Unpacked extension..." is the `chrome_extension` directory in the repo. You should see something similar as below:
+
+![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/Extension.png "Chrome Extension")
+
+6. Go to any public website. Click on the Findtelligent icon and write a query as shown below.
+
+![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/FindtelligentIcon.png "Click icon")
+
+7. Click submit or press enter and wait for a bit. If there are possible answers for your query you'll see then highlighted. In the example below we looked for "Vint Cerf awards" in his Wikipedia page.
+
+![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/Example.png "Example")
+
+What should be improved?
+------------------------
+
+* The scoring process must be done using parallel processing. Map Reduce it's a good candidate.
+* Implement getbyhtml in the API. Currently only getbyurl is implemented, which means that the API is retrieving the HTML locally. This is not good in a case where the URL is private because the API is not going to be able to get the HTML, therefore, a new API endpoint must allow to pass the HTML directly in the body of the request.
+* Add exceptions handling.
+* Add logging functionality to the API.
+* Add a "Find Next" button in the Chrome Extension so you can easily go to the highlighted sections.
+* Add loading status to the extension.
+
 References
 ----------
 
 [1] K. Kise, M. Junker, A. Dengel, and K. Matsumoto. Passage Retrieval Based on Density Distributions of Terms and Its Applications to Document Retrieval and Question Answering. Reading and Learning, pp.306-327, 2004.
-
-
-
-Please run the following commands before using it:
-
-python -m nltk.downloader punkt stopwords
-
-This is a Chrome extension for smart finding in a single HTML document.
