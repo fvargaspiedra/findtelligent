@@ -56,6 +56,11 @@ Response:
 
 Notice the RegEx form on the response which is really useful to highlight the HTML using Mark.js library.
 
+Following you can see the API documentation table:
+
+![alt text](https://github.com/fvargaspiedra/findtelligent/blob/master/docs/API.png "API")
+
+
 What about the Chrome Extension?
 --------------------------------
 
